@@ -12,9 +12,10 @@
         mainParagraph.setAttribute("id", "MainParagraph")
         mainParagraph.setAttribute("class", "mt-3")
 
-        let firstString = "This is a main paragraph added through Javascript"
+        let firstString = "This is a "
+        let secondString = `${ firstString } main paragraph that we added through javascript`
 
-        mainParagraph.textContent = firstString
+        mainParagraph.textContent = secondString
 
 
 
