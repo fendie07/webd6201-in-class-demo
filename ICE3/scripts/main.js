@@ -6,6 +6,7 @@
         })
 
         let mainContent = document.getElementsByTagName("main")[0]
+        mainContent.setAttribute("class", "container")
         //console.log(mainContent)
 
         let mainParagraph = document.createElement("p")
@@ -22,6 +23,15 @@
 
 
         mainContent.appendChild(mainParagraph)
+
+
+        documentBody.innerHTML = 
+        `<div class = "container">
+            <h1 class="display-1"> Hello WEBD6201</h1>
+            <p class="mt-5 lead"> and...what's the vibe>?</p>
+        </div>`
+
+        //document.getElementById("RandomButton").remove()    
 
 
     }
