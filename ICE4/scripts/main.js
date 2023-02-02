@@ -31,6 +31,10 @@
             <p class="mt-5 lead"> and...what's the vibe>?</p>
         </div>`
 
+        let essam = new Contact("Essam Fendish", "3579294892", "ShlimeGang@yahoo.uk")
+        console.log(essam.toString())
+
+
         //document.getElementById("RandomButton").remove()    
 
 
