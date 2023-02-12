@@ -32,6 +32,20 @@ class Contact{
         this.m_emailAddress = emailAddress
     }
 
+    serialize(){
+        if(this.name != "" && this.ContactNumber !="" && this.EmailAddress != "")
+            return `${this.Name}, ${this.ContactNumber}, ${this.EmailAddress}`
+        console.error("One or more properties or fields of the Contact Object are missing or invalid")
+        return null
+    }
+
+    deserialize(data){
+        let propertyArray = data.split(",")
+        this.Name = propertyArray[0]
+        this.ContactNumber = propertyArray[1]
+        this.EmailAddress = propertyArray[2]
+    }
+
     toString(){
         return `Full Name is ${ this.Name } \n Contact Information is ${this.ContactNumber} \n Email Address is ${this.EmailAddress} `
     }

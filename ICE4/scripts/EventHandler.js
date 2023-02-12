@@ -5,7 +5,7 @@ var userDisplay = document.getElementById("userDisplay");
 var passDisplay = document.getElementById("passDisplay");
 
 
-welcomeLabel.addEventListener("dblclick", function () {
+/*welcomeLabel.addEventListener("dblclick", function () {
     console.log("Event: dblclick");
     displayEvent.textContent = "Event: dblclick";
 });
@@ -18,7 +18,7 @@ welcomeLabel.addEventListener("mouseover", function () {
 welcomeLabel.addEventListener("mouseout", function () {
     console.log("Event: mouseout");
     displayEvent.textContent = "Event: mouseout";
-});
+});*/
 
 function validateForm() {
     let x = document.forms["myForm"]["username"].value;
