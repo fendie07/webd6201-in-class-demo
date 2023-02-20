@@ -48,6 +48,15 @@
     }
     function DisplayProjects(){
         console.log("Projects Page")
+        
+    }
+    function AddContact(fullName, contactNumber, emailAddress){
+        let contact = new Contact(fullName, contactNumber, emailAddress)
+        if(contact.serialize()){
+            let key = contact.Name.substring(0,1) + Date.now()
+            localStorage.setItem(key, contact.serialize())
+        }
+
     }
     function DisplayContacts(){
         console.log("Contacts Us Page")
@@ -61,11 +70,10 @@
         submitButton.addEventListener("click", function(){
             //event.preventDefault()
             if (subscribeCheckbox.checked){
-                let contact = new Contact(fullName.value, contactNumber.value, emailAddress.value)
-                if(contact.serialize()){
-                    let key = contact.Name.substring(0,1) + Date.now()
-                    localStorage.setItem(key, contact.serialize())
-                }
+                AddContact(fullName.value, contactNumber.value, emailAddress.value)
+
+                
+
             }
         })
     }
@@ -88,8 +96,8 @@
                 <td class= "text-center">${ contact.Name }</td>
                 <td class= "text-center">${ contact.ContactNumber}</td>
                 <td class= "text-center">${ contact.EmailAddress}</td>
-                <td class= "text-center"><td class="text-center"><button value="" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i>&nbsp; Edit</button></td></td>
-                <td class= "text-center"><td class="text-center" id = "deleteButton"><button value="" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i>&nbsp; Delete</button></td></td>
+                <td class= "text-center"><td class="text-center"><button value="${ key }" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i>&nbsp; Edit</button></td></td>
+                <td class= "text-center"><td class="text-center" id = "deleteButton"><button value="${ key }" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i>&nbsp; Delete</button></td></td>
                 </tr>
                 `
                 
@@ -99,7 +107,71 @@
             }
 
             contactlist.innerHTML = data
+
+            $("#addButton").on("click", () => {
+                location.href = "edit.html#Add"
+            })
+
+            $("button.delete").on("click", function(){
+
+                if(confirm("Are you sure you want to delete this?"))
+                localStorage.removeItem($(this).val())
+
+                location.href= "contactlist.html"
+            })
+
+            $("button.edit").on("click", function(){
+                location.href = 'edit.html#' + $(this).val()
+            })
         }
+    }
+    function DisplayEditPage(){
+        let page = location.hash.substring(1)
+        
+        
+        switch(page){
+            case "Add":
+                {
+                    $("#welcome").text("WEBD6201 Add Contact")
+
+                    $("#editButton").html(`<i class ="fas fa-plus-circle fa-lg"></i> Add`)
+
+                    $("#editButton").on("click", (event) => {
+                        event.preventDefault()
+                        AddContact(fullName.value, contactNumber.value, emailAddress.value)
+                        location.href="contactlist.html"
+                    })
+                    
+                }
+                break
+            default:
+                {
+                    let contact = new Contact()
+                    contact.deserialize(localStorage.getItem(page))
+    
+                    $("#fullName").val(contact.Name)
+                    $("#contactNumber").val(contact.ContactNumber)
+                    $("#emailAddress").val(contact.EmailAddress)
+
+                    $("#editButton").on("click", (event) => {
+                        event.preventDefault()
+
+
+                        contact.Name = $("#fullName").val()
+                        contact.ContactNumber = $("#contactNumber").val()
+                        contact.EmailAddress = $("#emailAddress").val()
+
+
+                        localStorage.setItem(page, contact.serialize())
+
+                        location.href = 'contactlist.html'
+                    })
+    
+                }
+            
+            break
+        }
+
     }
     function DisplayReferences(){
         console.log("References Page")
@@ -122,6 +194,9 @@
                 break;
             case "References - WEBD6201 Demo":
                 DisplayReferences();
+                break;
+            case "Edit - WEBD6201 Demo":
+                DisplayEditPage();
                 break;
         }
     }
