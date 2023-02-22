@@ -38,7 +38,7 @@
             <p class="mt-5 lead"> and...what's the vibe>?</p>
         </div>`
 
-        let essam = new Contact("Essam Fendish", "3579294892", "ShlimeGang@yahoo.uk")
+        let essam = new core.Contact("Essam Fendish", "3579294892", "ShlimeGang@yahoo.uk")
         console.log(essam.toString())*/
 
 
@@ -51,7 +51,7 @@
         
     }
     function AddContact(fullName, contactNumber, emailAddress){
-        let contact = new Contact(fullName, contactNumber, emailAddress)
+        let contact = new core.Contact(fullName, contactNumber, emailAddress)
         if(contact.serialize()){
             let key = contact.Name.substring(0,1) + Date.now()
             localStorage.setItem(key, contact.serialize())
@@ -88,7 +88,7 @@
 
             for (const key of keys) {
                 let contactData = localStorage.getItem(key)
-                let contact = new Contact()
+                let contact = new core.Contact()
                 contact.deserialize(contactData)
 
                 data += `<tr>
@@ -146,7 +146,7 @@
                 break
             default:
                 {
-                    let contact = new Contact()
+                    let contact = new core.Contact()
                     contact.deserialize(localStorage.getItem(page))
     
                     $("#fullName").val(contact.Name)
@@ -179,6 +179,7 @@
     function Start(){
         console.log("App Started!")
         
+        
         switch (document.title) {
             case "Home - WEBD6201 Demo":
                 DisplayHome();
@@ -199,6 +200,7 @@
                 DisplayEditPage();
                 break;
         }
+        $(window).scrollTop(0);
     }
     window.addEventListener("load", Start)
 })()
