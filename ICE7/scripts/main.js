@@ -62,7 +62,7 @@
     function TestPhoneNumber(){
         let messageArea = $('#messageArea').hide()
 
-        let phoneNumberPatter = /^(\([0-9]{3}\)\s*|[0-9]{3}\-)[0-9]{3}-[0-9]{4}$/g
+        let phoneNumberPatter = /^\d{10}$/g
 
         
         $('#contactNumber').on("blur", function(){
