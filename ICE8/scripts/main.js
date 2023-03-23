@@ -27,6 +27,7 @@
     function LoadHeader(html_data){
         $('#navigationBar').html(html_data)
         $(`li>a:contains(${ document.title })`).addClass('active')
+        CheckLogin()
     }
     function DisplayHome(){
         /*let randomButton = document.getElementById("RandomButton")
@@ -76,7 +77,7 @@
 
         //document.getElementById("RandomButton").remove()    
 
-        AjaxRequest("GET", "./static/header.html", LoadHeader)
+       
     }
     function DisplayProjects(){
         console.log("Projects Page")
@@ -214,6 +215,7 @@
         })
     }
     function DisplayContactList(){
+        
         if (localStorage.length > 0){
             let contactlist = document.getElementById("contactlist")
 
@@ -311,11 +313,61 @@
         }
 
     }
+    function CheckLogin(){
+        if(sessionStorage.getItem("user")){
+            $('#login').html(
+                `<a id = "logout" class="nav-link " href="./login.html"><i class = "fas fa-sign-out-alt"></i> Logout</a>`
+
+            )
+
+            $('#logout').on('click', function(){
+                sessionStorage.clear()
+
+                location.href = 'login.html'
+            })
+        }
+    }
+    
     function DisplayRegisterPage(){
         console.log("Register Page")
     }
     function DisplayLoginPage(){
         console.log("Login Page")
+        let messageArea = $('#messageArea')
+        messageArea.hide()
+
+        $('#loginButton').on('click', function(){
+            let success = false;
+            let newUser = new core.User()
+
+
+            $.get('./data/user.json', function(data){
+                for (const user of data.users){
+                    if(username.value == user.Username && password.value == user.Password){
+                        newUser.fromJSON(user)
+                        success = true 
+                        break
+                    }
+                }
+                if(success){
+                    sessionStorage.setItem('user', newUser.serialize())
+    
+                    messageArea.removeAttr('class').hide()
+    
+                    location.href = 'contactlist.html'
+                }else{
+                    $('#username').trigger('focus').trigger('select')
+                    messageArea.addClass('alert alert-danger').text('Error: Invalid login credentials..Username/Password Mismatch').show()
+                }
+            })
+
+            
+
+        })
+        $('#cancelButton').on('click', function(){
+            document.form[0].reset()
+            location.href = 'index.html'
+        })
     }
     function DisplayReferences(){
         console.log("References Page")
@@ -324,6 +376,7 @@
         console.log("App Started!")
         
         AjaxRequest("GET", "./static/header.html", LoadHeader)
+       
         switch (document.title) {
             
             case "Home":
@@ -333,7 +386,7 @@
             case "Projects":
                 DisplayProjects();
                 break;
-            case "Contact Us":
+            case "Contact":
                 DisplayContacts();
                 break;
             case "Contact List":
