@@ -1,0 +1,23 @@
+{
+    "users": 
+    [
+        {
+            "DisplayName": "admin admin", 
+            "EmailAddress": "admin.admin@admin.admin",
+            "Username": "admin",
+            "Password": "123456"
+        },
+        {
+            "DisplayName": "John Smith", 
+            "EmailAddress": "john.smith@durhamcollege.admin",
+            "Username": "johnsmith",
+            "Password": "123456"
+        },
+        {
+            "DisplayName": "JohJunen Smith", 
+            "EmailAddress": "june.smith@durhamcollege.admin",
+            "Username": "junesmith",
+            "Password": "123456"
+        }
+    ]
+}
