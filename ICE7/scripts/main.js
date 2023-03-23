@@ -1,4 +1,23 @@
 (function (){
+
+    function DisplayNavBar(){
+        let XHR = new XMLHttpRequest()
+        
+        //add event listener for readystatechange
+
+        XHR.addEventListener("readystatechange", () => {
+            if (XHR.readyState === 4 && XHR.status === 200) {
+                $('#navigationBar').html(XHR.responseText)
+            }
+        })
+
+        //connect and get data
+        XHR.open("GET", "./static/header.html")
+
+        //send data to server and await request
+        XHR.send()
+
+    }
     function DisplayHome(){
         /*let randomButton = document.getElementById("RandomButton")
         randomButton.addEventListener("click", function(){
@@ -31,6 +50,9 @@
         mainContent.appendChild(mainParagraph)
         $("main").addClass("container").append(`<p id="MainParagraph" class="mt-3 container">${ secondstring }</p> `)
 
+        //Ajax
+        //instantiate the XHR object
+        
 
         /*documentBody.innerHTML = 
         `<div class = "container">
@@ -109,11 +131,61 @@
             }
         })
     }
+    function TestEmail(){
+        let messageArea = $('#messageArea').hide()
+
+        let emailAddressPattern = /^[\w-\.]+@([\w-]+\.)+[\w-][^\d]{2,10}/g
+
+
+        $('#emailAddress').on("blur", function(){
+            let emailAddressText = $(this).val()
+
+            if(!emailAddressPattern.test(emailAddressText)){
+                $(this).trigger("focus").trigger("select")
+
+                messageArea.addClass("alert alert-danger").text("Please Enter a valid email address").show()
+
+            }
+            else{
+                messageArea.removeAttr("class").hide()
+               
+            }
+        })
+    }
+
+    function ValidateInput(inputfieldID, regularExpression, exception){
+        let messageArea = $('#messageArea').hide()
+
+        $('#' + inputfieldID).on("blur", function(){
+            let inputText = $(this).val()
+
+            if(!regularExpression.test(inputText)){
+                $(this).trigger("focus").trigger("select")
+
+                messageArea.addClass("alert alert-danger").text(exception).show()
+
+            }
+            else{
+                messageArea.removeAttr("class").hide()
+               
+            }
+        })
+        
+
+    }
+    function ContactFormValidate(){
+        let emailAddressPattern = /^[\w-\.]+@([\w-]+\.)+[\w-][^\d]{2,10}/g
+        let fullNamePattern = /^([A-Z][a-z]{1,25})((\s|,|-)([A-Z][a-z]{1,25}))*(\s|-|,)*([A-Z][a-z]{1,25})*$/g
+
+        ValidateInput("fullName", fullNamePattern, "Please Enter a valid full name which means a capitalized first name and last name")
+        ValidateInput("emailAddress", emailAddressPattern, "Please Enter a valid email address")
+
+
+    }
     function DisplayContacts(){
         console.log("Contacts Us Page")
-
-        TestFullName()
-        TestPhoneNumber()
+        
+        ContactFormValidate()
         let submitButton = document.getElementById("submitButton")
         let subscribeCheckbox = document.getElementById("subscribeCheckbox")
 
@@ -180,6 +252,8 @@
         }
     }
     function DisplayEditPage(){
+        ContactFormValidate()
+
         let page = location.hash.substring(1)
         
         
@@ -227,6 +301,12 @@
         }
 
     }
+    function DisplayRegisterPage(){
+        console.log("Register Page")
+    }
+    function DisplayLoginPage(){
+        console.log("Login Page")
+    }
     function DisplayReferences(){
         console.log("References Page")
     }
@@ -237,6 +317,7 @@
         switch (document.title) {
             case "Home - WEBD6201 Demo":
                 DisplayHome();
+                DisplayNavBar();
                 break;
             case "Projects - WEBD6201 Demo":
                 DisplayProjects();
@@ -252,6 +333,12 @@
                 break;
             case "Edit - WEBD6201 Demo":
                 DisplayEditPage();
+                break;
+            case "Login - WEBD6201 Demo":
+                DisplayLoginPage();
+                break;
+            case "Register - WEBD6201 Demo":
+                DisplayRegisterPage();
                 break;
         }
         $(window).scrollTop(0);
