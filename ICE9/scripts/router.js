@@ -75,7 +75,7 @@ core.Router = Router
 let router = new core.Router()
 
 router.AddRoutingTable([
-    "/",
+    "/webd6201-in-class-demo/ICE9/Views/Content",
     "/about",
     "/services",
     "/contact",
