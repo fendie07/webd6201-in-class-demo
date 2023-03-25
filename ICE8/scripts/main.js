@@ -247,7 +247,7 @@
             contactlist.innerHTML = data
 
             $("#addButton").on("click", () => {
-                location.href = "edit.html#Add"
+                location.href = "/edit#Add"
             })
 
             $("button.delete").on("click", function(){
@@ -255,11 +255,11 @@
                 if(confirm("Are you sure you want to delete this?"))
                 localStorage.removeItem($(this).val())
 
-                location.href= "contactlist.html"
+                location.href= "/contactlist"
             })
 
             $("button.edit").on("click", function(){
-                location.href = 'edit.html#' + $(this).val()
+                location.href = '/edit#' + $(this).val()
             })
         }
     }
@@ -304,7 +304,7 @@
 
                         localStorage.setItem(page, contact.serialize())
 
-                        location.href = 'contactlist.html'
+                        location.href = '/contactlist'
                     })
     
                 }
@@ -323,7 +323,7 @@
             $('#logout').on('click', function(){
                 sessionStorage.clear()
 
-                location.href = 'login.html'
+                location.href = '/login'
             })
         }
     }
@@ -354,7 +354,7 @@
     
                     messageArea.removeAttr('class').hide()
     
-                    location.href = 'contactlist.html'
+                    location.href = '/contactlist'
                 }else{
                     $('#username').trigger('focus').trigger('select')
                     messageArea.addClass('alert alert-danger').text('Error: Invalid login credentials..Username/Password Mismatch').show()
@@ -366,7 +366,7 @@
         })
         $('#cancelButton').on('click', function(){
             document.form[0].reset()
-            location.href = 'index.html'
+            location.href = '/index'
         })
     }
     function DisplayReferences(){

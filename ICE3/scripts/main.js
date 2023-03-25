@@ -2,7 +2,7 @@
     function DisplayButton(){
         let randomButton = document.getElementById("RandomButton")
         randomButton.addEventListener("click", function(){
-            location.href = '/webd6201-in-class-demo/projects.html'
+            location.href = '/projects'
         })
 
         let mainContent = document.getElementsByTagName("main")[0]

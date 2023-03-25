@@ -1,21 +1,59 @@
 (function (){
 
-    function DisplayNavBar(){
+    function AjaxRequest(method,url,callback){
         let XHR = new XMLHttpRequest()
         
         //add event listener for readystatechange
 
         XHR.addEventListener("readystatechange", () => {
             if (XHR.readyState === 4 && XHR.status === 200) {
-                $('#navigationBar').html(XHR.responseText)
+                if (typeof callback === 'function'){
+                    callback(XHR.responseText)
+                }
+                else{
+                    console.error("ERROR: callback is not a function")
+                }
             }
         })
 
         //connect and get data
-        XHR.open("GET", "./static/header.html")
+        XHR.open(method, url)
 
         //send data to server and await request
         XHR.send()
+
+    }
+
+    function LoadHeader(html_data){
+        $.get('./Views/components/header.html', function(html_data){
+            $('#navigationBar').html(html_data)
+
+            document.title = router.ActiveLink.substring(0, 2).toUpperCase() + router.ActiveLink.substring(2)
+            $(`li>a:contains(${ document.title })`).addClass('active')
+            
+        })
+        CheckLogin()
+    }
+    /**
+     * this functions loads content
+     * @returns {void}
+     */
+    function LoadContent(){
+        let pageName = router.ActiveLink
+        $.get(`./Views/content/${pageName}.html`, function(html_data){
+            $('main').html(html_data)
+
+            ActiveLinkCallBack()
+        })
+    }
+    /**
+     * @returns {void}
+     */
+    function LoadFooter(){
+        $.get('./Views/components/footer.html', function(html_data){
+            $('footer').html(html_data)
+
+        })
 
     }
     function DisplayHome(){
@@ -33,7 +71,7 @@
         })*/
 
         $("#RandomButton").on("click",function(){
-            location.href="./contact.html"
+            location.href="/contact"
         })
 
 
@@ -66,7 +104,7 @@
 
         //document.getElementById("RandomButton").remove()    
 
-
+       
     }
     function DisplayProjects(){
         console.log("Projects Page")
@@ -204,6 +242,7 @@
         })
     }
     function DisplayContactList(){
+        
         if (localStorage.length > 0){
             let contactlist = document.getElementById("contactlist")
 
@@ -234,10 +273,7 @@
 
             contactlist.innerHTML = data
 
-            $("#addButton").on("click", () => {
-                location.href = "/edit#Add"
-            })
-
+            
             $("button.delete").on("click", function(){
 
                 if(confirm("Are you sure you want to delete this?"))
@@ -250,6 +286,10 @@
                 location.href = '/edit#' + $(this).val()
             })
         }
+        $("#addButton").on("click", () => {
+                location.href = "/edit#Add"
+            })
+
     }
     function DisplayEditPage(){
         ContactFormValidate()
@@ -267,7 +307,7 @@
                     $("#editButton").on("click", (event) => {
                         event.preventDefault()
                         AddContact(fullName.value, contactNumber.value, emailAddress.value)
-                        location.href="contactlist.html"
+                        location.href="/contactlist"
                     })
                     
                 }
@@ -301,46 +341,127 @@
         }
 
     }
+    function CheckLogin(){
+        if(sessionStorage.getItem("user")){
+            $('#login').html(
+                `<a id = "logout" class="nav-link " href="/login"><i class = "fas fa-sign-out-alt"></i> Logout</a>`
+
+            )
+
+            $('#logout').on('click', function(){
+                sessionStorage.clear()
+
+                location.href = '/login'
+            })
+        }
+    }
+    
     function DisplayRegisterPage(){
         console.log("Register Page")
     }
     function DisplayLoginPage(){
         console.log("Login Page")
+        let messageArea = $('#messageArea')
+        messageArea.hide()
+
+        $('#loginButton').on('click', function(){
+            let success = false;
+            let newUser = new core.User()
+
+
+            $.get('./data/user.json', function(data){
+                for (const user of data.users){
+                    if(username.value == user.Username && password.value == user.Password){
+                        newUser.fromJSON(user)
+                        success = true 
+                        break
+                    }
+                }
+                if(success){
+                    sessionStorage.setItem('user', newUser.serialize())
+    
+                    messageArea.removeAttr('class').hide()
+    
+                    location.href = '/contactlist'
+                }else{
+                    $('#username').trigger('focus').trigger('select')
+                    messageArea.addClass('alert alert-danger').text('Error: Invalid login credentials..Username/Password Mismatch').show()
+                }
+            })
+
+            
+
+        })
+        $('#cancelButton').on('click', function(){
+            document.form[0].reset()
+            location.href = '/index'
+        })
     }
     function DisplayReferences(){
         console.log("References Page")
     }
+    function Display404Page (){
+        console.log("404 Page")
+        
+    }
+
+    /**
+     * @returns {function}
+     */
+    function ActiveLinkCallBack(){
+        console.log(`ActiveLinkCallBack - ${router.ActiveLink}`)
+        switch (router.ActiveLink){
+            case "home": return DisplayHome()
+            case "projects": return DisplayProjects()
+            case "contact": return DisplayContacts()
+            case "contactlist": return DisplayContactList()
+            case "references": return DisplayReferences()
+            case "edit": return DisplayEditPage()
+            case "login": return DisplayLoginPage()
+            case "register": return DisplayRegisterPage()
+            case "404": return Display404Page()
+            
+            default:
+                console.error(`Error: Callback does not Exist... ${router.ActiveLink}`);
+              
+        }
+    }
     function Start(){
         console.log("App Started!")
         
-        
-        switch (document.title) {
-            case "Home - WEBD6201 Demo":
+        //AjaxRequest("GET", "./static/header.html", LoadHeader)
+        LoadHeader()
+        LoadContent()
+        LoadFooter()
+       
+       /*  switch (document.title) {
+            
+            case "Home":
                 DisplayHome();
-                DisplayNavBar();
+                
                 break;
-            case "Projects - WEBD6201 Demo":
+            case "Projects":
                 DisplayProjects();
                 break;
-            case "Contact Us - WEBD6201 Demo":
+            case "Contact":
                 DisplayContacts();
                 break;
-            case "Contact List - WEBD6201 Demo":
+            case "Contact List":
                 DisplayContactList();
                 break;
-            case "References - WEBD6201 Demo":
+            case "References":
                 DisplayReferences();
                 break;
-            case "Edit - WEBD6201 Demo":
+            case "Edit":
                 DisplayEditPage();
                 break;
-            case "Login - WEBD6201 Demo":
+            case "Login":
                 DisplayLoginPage();
                 break;
-            case "Register - WEBD6201 Demo":
+            case "Register":
                 DisplayRegisterPage();
                 break;
-        }
+        } */
         $(window).scrollTop(0);
     }
     window.addEventListener("load", Start)
